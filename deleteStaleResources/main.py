@@ -48,8 +48,8 @@ def lambda_handler(event, context):
 
                 # Check for "do-not-delete" tag
                 do_not_delete = tags.get("do-not-delete", "").lower()
-                environment_tag = tags.get('Environment', '').lower()
-                if do_not_delete == "true" and and environment_tag == 'dev':
+                environment_tag = tags.get("Environment", "").lower()
+                if do_not_delete == "true" and environment_tag == "dev":
                     print(
                         f"Skipping EC2 instance {instance_id} with 'do-not-delete' tag set to true"
                     )
@@ -82,8 +82,8 @@ def lambda_handler(event, context):
             tags = cluster_tags
 
             do_not_delete = tags.get("do-not-delete", "").lower()
-            environment_tag = tags.get('Environment', '').lower()
-            if do_not_delete == "true" and environment_tag == 'dev':
+            environment_tag = tags.get("Environment", "").lower()
+            if do_not_delete == "true" and environment_tag == "dev":
                 print(
                     f"Skipping EKS cluster {cluster_name} with 'do-not-delete' tag set to true"
                 )
