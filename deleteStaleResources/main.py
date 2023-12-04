@@ -49,7 +49,7 @@ def lambda_handler(event, context):
                 # Check for "do-not-delete" tag
                 do_not_delete = tags.get("do-not-delete", "").lower()
                 environment_tag = tags.get("Environment", "").lower()
-                if do_not_delete == "true" and environment_tag == "dev":
+                if do_not_delete == "true":
                     print(
                         f"Skipping EC2 instance {instance_id} with 'do-not-delete' tag set to true"
                     )
@@ -57,7 +57,7 @@ def lambda_handler(event, context):
                         f"Instance ID: {instance_id}, Tags: {tags}, Age: {age_in_hours:.2f} hours"
                     )
                 else:
-                    if launch_time_utc < threshold_time_utc:
+                    if launch_time_utc < threshold_time_utc and environment_tag != prod:
                         print(f"Deleting EC2 instance {instance_id}")
                         ec2_client.terminate_instances(InstanceIds=[instance_id])
                     else:
@@ -83,7 +83,7 @@ def lambda_handler(event, context):
 
             do_not_delete = tags.get("do-not-delete", "").lower()
             environment_tag = tags.get("Environment", "").lower()
-            if do_not_delete == "true" and environment_tag == "dev":
+            if do_not_delete == "true":
                 print(
                     f"Skipping EKS cluster {cluster_name} with 'do-not-delete' tag set to true"
                 )
@@ -91,7 +91,7 @@ def lambda_handler(event, context):
                     f"Cluster Name: {cluster_name}, Tags: {tags}, Age: {age_in_hours:.2f} hours"
                 )
             else:
-                if created_at_utc < threshold_time_utc:
+                if created_at_utc < threshold_time_utc and environment_tag != prod:
                     # Check for attached node groups
                     nodegroups = eks_client.list_nodegroups(clusterName=cluster_name)
                     if nodegroups["nodegroups"]:
