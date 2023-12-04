@@ -62,7 +62,7 @@ def lambda_handler(event, context):
                         ec2_client.terminate_instances(InstanceIds=[instance_id])
                     else:
                         print(
-                            f"EC2 instance {instance_id} is not older than 24 hours but can be deleted"
+                            f"EC2 instance {instance_id} is not older than 24 hours or is prod env"
                         )
                         print(
                             f"Instance ID: {instance_id}, Tags: {tags}, Age: {age_in_hours:.2f} hours"
@@ -110,7 +110,7 @@ def lambda_handler(event, context):
                     eks_client.delete_cluster(name=cluster_name)
                 else:
                     print(
-                        f"EKS cluster {cluster_name} is not older than 24 hours but can be deleted"
+                        f"EKS cluster {cluster_name} is not older than 24 hours or is prod account"
                     )
                     print(
                         f"Cluster Name: {cluster_name}, Tags: {tags}, Age: {age_in_hours:.2f} hours"
